@@ -21,9 +21,7 @@ void	parse_cmd(char **argv)
 	{
 		ft_free_matrix(pipex.cmd1);
 		ft_free_matrix(pipex.cmd2);
-		ft_putstr_fd("Error: no command ", 2);
+		ft_putstr_fd("Error: no commands or invalid commands.\n", 2);
 		exit(1);
 	}
-	ft_free_matrix(pipex.cmd1);
-	ft_free_matrix(pipex.cmd2);
 }
