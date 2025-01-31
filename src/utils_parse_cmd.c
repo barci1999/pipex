@@ -1,38 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   utils_parse_cmd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pablalva <pablalva@student.42madrid.com>   #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-01-28 09:29:13 by pablalva          #+#    #+#             */
-/*   Updated: 2025-01-28 09:29:13 by pablalva         ###   ########.fr       */
+/*   Created: 2025-01-31 16:50:10 by pablalva          #+#    #+#             */
+/*   Updated: 2025-01-31 16:50:10 by pablalva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "pipex.h"
 
-# include "ft_printf.h"
-# include "libft.h"
-# include <fcntl.h>
-# include <stdlib.h>
-# include <string.h>
-# include <unistd.h>
-# include <wait.h>
-
-typedef struct pipex
+void	parse_cmd(char **argv)
 {
-	char	*infile;
-	char	**cmd1;
-	char	**cmd2;
-	char	*outfile;
-	int		fd_in;
-	int		fd_out;
+	t_data	pipex;
 
-}			t_data;
-
-void		open_fd(t_data *pipex);
-void		parse_fd(char **argv);
-void		parse_cmd(char **argv);
-
-#endif
+	pipex.cmd1 = ft_split(argv[2], ' ');
+	pipex.cmd2 = ft_split(argv[3], ' ');
+	if (pipex.cmd1 == NULL || pipex.cmd2 == NULL)
+	{
+		ft_free_matrix(pipex.cmd1);
+		ft_free_matrix(pipex.cmd2);
+		ft_putstr_fd("Error: no command ", 2);
+		exit(1);
+	}
+	ft_free_matrix(pipex.cmd1);
+	ft_free_matrix(pipex.cmd2);
+}

@@ -23,7 +23,7 @@ CFILES = ft_atoi.c ft_bzero.c ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.
 	   ft_lstsize_bonus.c ft_lstnew_bonus.c ft_lstlast_bonus.c ft_lstdelone_bonus.c\
 		ft_lstclear_bonus.c ft_lstadd_front_bonus.c ft_lstadd_back_bonus.c ft_lstiter_bonus.c\
 		ft_lstmap_bonus.c ft_str_isdigit.c ft_atof.c ft_str_is_dec.c ft_del.c ft_atol.c\
-		ft_is_sing.c ft_is_valid_num.c
+		ft_is_sing.c ft_is_valid_num.c ft_free_matrix.c
 
 HEADERS_DIR = /
 

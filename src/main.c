@@ -11,8 +11,11 @@
 /* ************************************************************************** */
 #include "pipex.h"
 
-int	main(void)
+int	main(int argc, char **argv)
 {
-	ft_printf("perro");
+	if (argc != 5)
+		return (0);
+	parse_fd(argv);
+	parse_cmd(argv);
 	return (0);
 }

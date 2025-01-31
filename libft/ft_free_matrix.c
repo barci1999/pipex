@@ -1,38 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_free_matrix.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pablalva <pablalva@student.42madrid.com>   #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-01-28 09:29:13 by pablalva          #+#    #+#             */
-/*   Updated: 2025-01-28 09:29:13 by pablalva         ###   ########.fr       */
+/*   Created: 2025-01-31 14:56:16 by pablalva          #+#    #+#             */
+/*   Updated: 2025-01-31 14:56:16 by pablalva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef PIPEX_H
-# define PIPEX_H
 
-# include "ft_printf.h"
-# include "libft.h"
-# include <fcntl.h>
-# include <stdlib.h>
-# include <string.h>
-# include <unistd.h>
-# include <wait.h>
+#include "libft.h"
 
-typedef struct pipex
+void	ft_free_matrix(char **matrix)
 {
-	char	*infile;
-	char	**cmd1;
-	char	**cmd2;
-	char	*outfile;
-	int		fd_in;
-	int		fd_out;
+	int	i;
 
-}			t_data;
-
-void		open_fd(t_data *pipex);
-void		parse_fd(char **argv);
-void		parse_cmd(char **argv);
-
-#endif
+	i = 0;
+	if (matrix == NULL)
+		return ;
+	while (matrix[i])
+	{
+		free(matrix[i]);
+		i++;
+	}
+	free(matrix);
+}

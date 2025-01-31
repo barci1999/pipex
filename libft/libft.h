@@ -60,6 +60,7 @@ long				ft_atol(char *str);
 int					ft_str_is_dec(char *nb);
 int					ft_is_sing(char c);
 int					ft_is_valid_num(char *nbr);
+void				ft_free_matrix(char **matrix);
 
 typedef struct s_list
 {
