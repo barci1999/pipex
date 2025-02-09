@@ -18,32 +18,39 @@ void	first_cmd(t_data *pipex, char **cmds, char **envp)
 	int j;
 	j = 0;
 	char **cmd;
+	pid_t child;
 
 	while(i <= pipex->num_pipes)
 	{
-		pipex->pid = fork();
-		if(pipex->pid == 0)
+		child = fork();
+		if(child == 0)
 		{
+			cmd = ft_split(cmds[i+1],' ');
+			take_cmd_path(pipex, cmds[i], envp);
 			if(i == 0)
 			{
-				cmd = ft_split(cmds[i],' ');
-				take_cmd_path(pipex, cmds[i], envp);
+				if(pipex->infile_fd != -1)
+				{
+					dup2(pipex->infile_fd,STDIN_FILENO);
+					close(pipex->infile_fd);
+				}
 				close(pipex->pipes[i][0]);
 				dup2(pipex->pipes[i][1],STDOUT_FILENO);
 				close(pipex->pipes[i][1]);
 			}
 			else if (i == pipex->num_pipes)
 			{
-				cmd = ft_split(cmds[i],' ');
-				take_cmd_path(pipex, cmds[i], envp);
 				close(pipex->pipes[i - 1][1]);
 				dup2(pipex->pipes[i -1][0],STDIN_FILENO);
 				close(pipex->pipes[i -1][0]);
+				if(pipex->outfile_fd != -1)
+				{
+					dup2(pipex->outfile_fd,STDOUT_FILENO);
+					close(pipex->outfile_fd);
+				}
 			}
 			else
 			{
-				cmd = ft_split(cmds[i],' ');
-				take_cmd_path(pipex, cmds[i], envp);
 				close(pipex->pipes[i -1][1]);
 				dup2(pipex->pipes[i -1][0],STDIN_FILENO);
 				close(pipex->pipes[i -1][0]);
@@ -54,7 +61,6 @@ void	first_cmd(t_data *pipex, char **cmds, char **envp)
 			}
 			execve(pipex->cmd_path,cmds,envp);
 		}
-		free(pipex->cmd_path);
 		i++;
 	}
 	while (j <= pipex->num_pipes + 1)

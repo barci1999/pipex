@@ -31,7 +31,7 @@ void 	take_cmd_path(t_data *pipex, char *cmd, char **envp)
 		{
 			pipex->cmd_path = ft_strdup(cmd_path);
 			free(cmd_path);
-			printf("%s",pipex->cmd_path);
+			//printf("%s\n",pipex->cmd_path);
 			ft_free_matrix(pipex->paths);
 			return;
 		}
