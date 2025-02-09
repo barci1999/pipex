@@ -1,21 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_sqrt.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pablalva <pablalva@student.42madrid.com>   #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-01-28 09:43:03 by pablalva          #+#    #+#             */
-/*   Updated: 2025-01-28 09:43:03 by pablalva         ###   ########.fr       */
+/*   Created: 2025-01-21 12:14:22 by pablalva          #+#    #+#             */
+/*   Updated: 2025-01-21 12:14:22 by pablalva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "pipex.h"
+#include "libft.h"
 
-int	main(int argc, char **argv)
+int	ft_sqrt(int num)
 {
-	if (argc != 5)
-		return (0);
-	parse_fd(argv);
-	parse_cmd(argv);
-	return (0);
+	int	i;
+
+	if (num < 4)
+		return (1);
+	i = 2;
+	while (i * i < num)
+	{
+		i++;
+	}
+	if (i * i > num)
+	{
+		if ((i * i - num) < ((i - 1) * (i - 1) + (-num)))
+			return (i);
+	}
+	return (i - 1);
 }

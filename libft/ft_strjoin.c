@@ -23,7 +23,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	len_2 = ft_strlen(s2);
 	s3 = ft_calloc((len_1 + len_2 + 1), sizeof(char));
 	if (s3 == NULL)
+	{
+		free(s3);
 		return (NULL);
+	}
 	len_3 = len_1 + len_2 + 1;
 	ft_strlcat(s3, s1, len_3);
 	ft_strlcat(s3, s2, len_3);

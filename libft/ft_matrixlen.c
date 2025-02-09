@@ -1,21 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_pipe.c                                       :+:      :+:    :+:   */
+/*   ft_matrixlen.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pablalva <pablalva@student.42madrid.com>   #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-01-31 18:10:31 by pablalva          #+#    #+#             */
-/*   Updated: 2025-01-31 18:10:31 by pablalva         ###   ########.fr       */
+/*   Created: 2025-02-03 18:13:33 by pablalva          #+#    #+#             */
+/*   Updated: 2025-02-03 18:13:33 by pablalva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "pipex.h"
+#include "libft.h"
 
-void	pipe_control(t_data *pipex)
+int	ft_matrixlen(char **matrix)
 {
-	if (pipe(pipex->pipefd) == -1)
-	{
-		perror("Error");
-		exit(1);
-	}
+	int	i;
+
+	i = 0;
+	while (matrix[i])
+		i++;
+	return (i);
 }
