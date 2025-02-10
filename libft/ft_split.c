@@ -92,7 +92,6 @@ char	**ft_split(char const *s, char c)
 {
 	char	**dest;
 	int		word_count;
-
 	if (s == NULL)
 		return (NULL);
 	word_count = count_words(s, c);

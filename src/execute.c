@@ -13,20 +13,27 @@
 
 void	first_cmd(t_data *pipex, char **cmds, char **envp)
 {
+
 	int i;
-	i = 0;
 	int j;
+	int c;
+	i = 0;
 	j = 0;
+	c =  2;
 	char **cmd;
 	pid_t child;
+	pipex->pipes = all_pipes(pipex);
 
 	while(i <= pipex->num_pipes)
 	{
+		if(c <= pipex->cmd_nbr)
+			cmd = ft_split(cmds[c],' ');
+		take_cmd_path(pipex, cmds[c], envp);
+		printf("Comando a ejecutar: %s %s\n", cmd[0], cmd[1]); 
 		child = fork();
 		if(child == 0)
 		{
-			cmd = ft_split(cmds[i+1],' ');
-			take_cmd_path(pipex, cmds[i], envp);
+			printf("%s\n",pipex->cmd_path);
 			if(i == 0)
 			{
 				if(pipex->infile_fd != -1)
@@ -37,12 +44,13 @@ void	first_cmd(t_data *pipex, char **cmds, char **envp)
 				close(pipex->pipes[i][0]);
 				dup2(pipex->pipes[i][1],STDOUT_FILENO);
 				close(pipex->pipes[i][1]);
+
 			}
 			else if (i == pipex->num_pipes)
 			{
 				close(pipex->pipes[i - 1][1]);
-				dup2(pipex->pipes[i -1][0],STDIN_FILENO);
-				close(pipex->pipes[i -1][0]);
+				dup2(pipex->pipes[i - 1][0],STDIN_FILENO);
+				close(pipex->pipes[i - 1][0]);
 				if(pipex->outfile_fd != -1)
 				{
 					dup2(pipex->outfile_fd,STDOUT_FILENO);
@@ -51,16 +59,18 @@ void	first_cmd(t_data *pipex, char **cmds, char **envp)
 			}
 			else
 			{
-				close(pipex->pipes[i -1][1]);
-				dup2(pipex->pipes[i -1][0],STDIN_FILENO);
-				close(pipex->pipes[i -1][0]);
+				close(pipex->pipes[i - 1][1]);
+				dup2(pipex->pipes[i - 1][0],STDIN_FILENO);
+				close(pipex->pipes[i - 1][0]);
 
 				close(pipex->pipes[i][0]);
 				dup2(pipex->pipes[i][1],STDOUT_FILENO);
 				close(pipex->pipes[i][1]);
+
 			}
-			execve(pipex->cmd_path,cmds,envp);
+			execve(pipex->cmd_path,cmd,envp);
 		}
+		c++;
 		i++;
 	}
 	while (j <= pipex->num_pipes + 1)
