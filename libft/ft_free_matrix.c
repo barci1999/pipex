@@ -18,7 +18,9 @@ void	ft_free_matrix(char **matrix)
 
 	i = 0;
 	if (matrix == NULL)
-		return ;
+	{
+		return;
+	}
 	while (matrix[i])
 	{
 		free(matrix[i]);

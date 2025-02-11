@@ -39,8 +39,7 @@ void		open_fd_out(t_data *pipex, char *outfile);
 void		open_here(t_data *pipex, char *delim);
 void		open_fd_in(t_data *pipex, char *infile);
 void		first_cmd(t_data *pipex, char **cmd, char **envp);
-void 	take_cmd_path(t_data *pipex, char *cmd, char **envp);
+void 	take_cmd_path(t_data *pipex, char **cmd, char **envp);
 void		take_paths_env(t_data *pipex, char **envp);
-int			**all_pipes(t_data *pipex);
 
 #endif

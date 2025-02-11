@@ -45,29 +45,3 @@ void	open_fd_out(t_data *pipex, char *outfile)
 		exit(1);
 	}
 }
-int **all_pipes(t_data *pipex)
-{
-	int **pipes = NULL;
-	int i = 0;
-	pipes = malloc(sizeof(int *) * pipex->num_pipes);
-	if(!pipes)
-	{
-		return(NULL);
-	}
-	while (i < pipex->num_pipes)
-	{
-		pipes[i] = malloc(sizeof(int) * 2);
-		if(!pipes[i])
-		{
-			free_pipes(pipes,i);
-			return(NULL);
-		}
-		if(pipe(pipes[i]) == -1)
-		{
-			free_pipes(pipes,i);
-			return(NULL);
-		}
-		i++;
-	}
-	return(pipes);
-}

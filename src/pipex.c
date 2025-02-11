@@ -33,11 +33,13 @@ int	main(int argc, char **argv, char **envp)
 	}
 	else
 	{
-		pipex.cmd_nbr = argc - 3;
+		pipex.cmd_nbr = argc - 1;
 		pipex.num_pipes = pipex.cmd_nbr - 1;
 		open_fd_in(&pipex, argv[1]);
 		open_fd_out(&pipex, argv[argc - 1]);
 		first_cmd(&pipex, argv, envp);	
+		close(pipex.infile_fd);
+		close(pipex.outfile_fd);
 		// mid_cmd(&pipex,argv,envp);
 		// last_cmd(&pipex,argv[argc - 2],envp);
 	}

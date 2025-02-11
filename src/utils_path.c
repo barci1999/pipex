@@ -11,27 +11,26 @@
 /* ************************************************************************** */
 #include "pipex.h"
 
-void 	take_cmd_path(t_data *pipex, char *cmd, char **envp)
+void 	take_cmd_path(t_data *pipex, char **cmd, char **envp)
 {
 	char	*temp;
 	int		i;
 	char	*cmd_path;
 	pipex->cmd_path = NULL;
-	char **matrix_cmd = NULL;
 
 	temp = NULL;
 	i = 0;
 	cmd_path = NULL;
-	matrix_cmd = ft_split(cmd,' ');
 	take_paths_env(pipex, envp);
 	while (pipex->paths[i] != NULL)
 	{
 		temp = ft_strjoin(pipex->paths[i], "/");
-		cmd_path = ft_strjoin(temp, matrix_cmd[0]);
+		cmd_path = ft_strjoin(temp, cmd[0]);
 		free(temp);
 		if (access(cmd_path, X_OK) == 0)
 		{
 			pipex->cmd_path = ft_strdup(cmd_path);
+			//printf("dentro %s\n",pipex->cmd_path);
 			free(cmd_path);
 			ft_free_matrix(pipex->paths);
 			return;
