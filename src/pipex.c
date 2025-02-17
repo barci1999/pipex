@@ -14,34 +14,40 @@
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	pipex;
-	ft_memset(&pipex,0,sizeof(pipex));
+	int		i;
+	int		temp;
 
+	i = 0;
+	ft_memset(&pipex, 0, sizeof(pipex));
+	pipex.argc = argc;
 	if (argc < 5)
 	{
 		return (0);
 	}
 	if (ft_strncmp(argv[1], "here_doc", 8) == 0)
 	{
-		pipex.cmd_nbr = argc - 4;
-		pipex.num_pipes = pipex.cmd_nbr - 1;
+		pipex.i = 3;
+		temp = pipex.i;
 		open_here(&pipex, argv[2]);
 		open_fd_out(&pipex, argv[argc - 1]);
-		first_cmd(&pipex, argv, envp);
-		// mid_cmd(&pipex,argv,envp);
-		// last_cmd(&pipex,argv[argc - 2],envp);
+		dup2(pipex.here_fd, STDIN_FILENO);
 		close(pipex.outfile_fd);
 	}
 	else
 	{
-		pipex.cmd_nbr = argc - 1;
-		pipex.num_pipes = pipex.cmd_nbr - 1;
+		pipex.i = 2;
+		temp = pipex.i;
 		open_fd_in(&pipex, argv[1]);
 		open_fd_out(&pipex, argv[argc - 1]);
-		first_cmd(&pipex, argv, envp);	
-		close(pipex.infile_fd);
-		close(pipex.outfile_fd);
-		// mid_cmd(&pipex,argv,envp);
-		// last_cmd(&pipex,argv[argc - 2],envp);
+		dup2(pipex.infile_fd, STDIN_FILENO);
 	}
+	while (pipex.i <= pipex.argc - 2)
+	{
+		printf("%i\n",pipex.i);
+		child(argv[pipex.i], envp, &pipex);
+		pipex.i++;
+	}
+	while (temp++ <= argc - 2)
+		wait(NULL);
 	return (0);
 }

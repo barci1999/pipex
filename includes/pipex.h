@@ -22,15 +22,14 @@
 
 typedef struct pipex
 {
-	int		cmd_nbr;
 	int		here_fd;
 	int		infile_fd;
 	int		outfile_fd;
 	char	*path_env;
 	char	**paths;
 	char	*cmd_path;
-	int		num_pipes;
-	int **pipes;
+	int argc;
+	int i;
 	pid_t pid;
 
 }			t_data;
@@ -38,8 +37,9 @@ typedef struct pipex
 void		open_fd_out(t_data *pipex, char *outfile);
 void		open_here(t_data *pipex, char *delim);
 void		open_fd_in(t_data *pipex, char *infile);
-void		first_cmd(t_data *pipex, char **cmd, char **envp);
-void 	take_cmd_path(t_data *pipex, char **cmd, char **envp);
-void		take_paths_env(t_data *pipex, char **envp);
+char 	*take_cmd_path(char **cmd, char **envp);
+char	**take_paths_env(char **envp);
+void	child(char *cmd,char **envp,t_data *pipex);
+void	execute_cmd(char *cmds,char **envp);
 
 #endif

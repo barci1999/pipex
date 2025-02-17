@@ -11,95 +11,69 @@
 /* ************************************************************************** */
 #include "pipex.h"
 
-void	first_cmd(t_data *pipex, char **cmds, char **envp)
+void child(char *cmd, char **envp, t_data *pipex)
 {
-	int		i;
-	int		c;
-	char	**cmd;
-	int		pipefd[2];
-	int		pipefd_prev[2];
+    pid_t pid;
+    int pipefd[2];
+    
+    if (pipe(pipefd) == -1)
+    {
+        perror("Error en pipe");
+        exit(1);
+    }
 
-	i = 0;
-	c = 2;
-	if (pipe(pipefd_prev) == -1)
+    pid = fork();
+    if (pid == -1)
+        perror("Error en fork");
+
+    if (pid == 0)
+    {
+        close(pipefd[0]);
+
+        if (pipex->i == pipex->argc - 2)
+        {
+            dup2(pipex->outfile_fd, STDOUT_FILENO);
+        }
+        else 
+        {
+            dup2(pipefd[1], STDOUT_FILENO);
+        }
+        close(pipefd[1]);
+        execute_cmd(cmd, envp);
+    }
+    else 
+    {
+        if (pipex->i != pipex->argc - 2)
+        {
+            close(pipefd[1]);
+            dup2(pipefd[0], STDIN_FILENO);
+        }
+        else
+        {
+            close(pipefd[0]);
+        }
+        close(pipefd[0]);
+    }
+}
+
+void	execute_cmd(char *cmds,char **envp)
+{
+	char **cmd;
+	cmd = NULL;
+	char *cmd_path;
+	cmd_path = NULL;
+	cmd = ft_split(cmds,' ');
+	cmd_path = take_cmd_path(cmd,envp);
+	if(!cmd_path)
 	{
-		perror("Error: no pipe_prev creation");
+		ft_free_matrix(cmd);
+		free(cmd_path);
+		perror("Error in path");
 		exit(1);
 	}
-	while (i <= pipex->cmd_nbr)
+	if(execve(cmd_path,cmd,envp) == -1)
 	{
-		printf("perro salchicha\n");
-		if (c < pipex->cmd_nbr)
-		{
-			cmd = ft_split(cmds[c], ' ');
-			take_cmd_path(pipex, cmd, envp);
-		}
-		//printf("hola %s\n",pipex->cmd_path);
-		if (i < pipex->cmd_nbr && pipe(pipefd) == -1)
-		{
-			perror("Error in creation pipe");
-			exit(1);
-		}
-		pipex->pid = fork();
-		if (pipex->pid == 0)
-		{
-			if (i == 0)
-			{
-				dup2(pipex->infile_fd, STDIN_FILENO);
-				dup2(pipefd[1], STDOUT_FILENO);
-				if (execve(pipex->cmd_path, cmd, envp) == -1)
-				{
-					perror("Error in execve first");
-					close(pipefd[0]);
-					close(pipefd[1]);
-					exit(1);
-				}
-			}
-			else if (i == pipex->cmd_nbr)
-			{
-				dup2(pipefd_prev[0], STDIN_FILENO);
-				dup2(pipex->outfile_fd, STDOUT_FILENO);
-				if (execve(pipex->cmd_path, cmd, envp) == -1)
-				{
-					perror("Error in execve last");
-					close(pipefd_prev[0]);
-					close(pipefd_prev[1]);
-					exit(1);
-				}
-			}
-			else
-			{
-				dup2(pipefd_prev[0], STDIN_FILENO);
-				dup2(pipefd[1], STDOUT_FILENO);
-				if (execve(pipex->cmd_path, cmd, envp) == -1)
-				{
-					perror("Error in execve midium");
-					close(pipefd[0]);
-					close(pipefd[1]);
-					close(pipefd_prev[0]);
-					close(pipefd_prev[1]);
-					exit(1);
-				}
-			}
-		}
-		if (i < pipex->cmd_nbr)
-		{
-			pipefd_prev[0] = pipefd[0];
-			pipefd_prev[1] = pipefd[1];
-			close(pipefd[0]);
-			close(pipefd[1]);
-		}
-		c++;
-		i++;
+		perror("Error in execve");
+		exit(1);
 	}
-	while (i--)
-	{
-		waitpid(-1, NULL, 0);
-	}
-		printf("perro\n");
-	free(pipex->cmd_path);
 }
-// void	med_cmd(t_data *pipex,char **cmds,char **envp)
-//{}
-// void	last_cmd(t_data *pipex,char *last_cmd,char **envp)
-//{}

@@ -11,54 +11,56 @@
 /* ************************************************************************** */
 #include "pipex.h"
 
-void 	take_cmd_path(t_data *pipex, char **cmd, char **envp)
+char 	*take_cmd_path(char **cmd, char **envp)
 {
 	char	*temp;
 	int		i;
 	char	*cmd_path;
-	pipex->cmd_path = NULL;
+	char **paths;
+	paths = NULL;
 
 	temp = NULL;
 	i = 0;
 	cmd_path = NULL;
-	take_paths_env(pipex, envp);
-	while (pipex->paths[i] != NULL)
+	paths = take_paths_env(envp);
+	while (paths != NULL)
 	{
-		temp = ft_strjoin(pipex->paths[i], "/");
+		temp = ft_strjoin(paths[i], "/");
 		cmd_path = ft_strjoin(temp, cmd[0]);
 		free(temp);
 		if (access(cmd_path, X_OK) == 0)
 		{
-			pipex->cmd_path = ft_strdup(cmd_path);
-			//printf("dentro %s\n",pipex->cmd_path);
-			free(cmd_path);
-			ft_free_matrix(pipex->paths);
-			return;
+			ft_free_matrix(paths);
+			return(cmd_path);
 		}
 		free(cmd_path);
 		i++;
 	}
+	return(NULL);
 }
 
-void	take_paths_env(t_data *pipex, char **envp)
+char	**take_paths_env(char **envp)
 {
 	int	i;
-
 	i = 0;
-	pipex->path_env = NULL;
+	char *path_env;
+	char **paths;
+	paths = NULL;
+	path_env = NULL;
 	while (*envp)
 	{
 		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
 		{
-			pipex->path_env = envp[i] + 5;
+			path_env = envp[i] + 5;
 			break ;
 		}
 		envp++;
 	}
-	pipex->paths = ft_split(pipex->path_env, ':');
-	if (pipex->paths == NULL)
+	paths = ft_split(path_env, ':');
+	if (paths == NULL)
 	{
 		perror("Error");
 		exit(1);
 	}
+	return(paths);
 }
