@@ -43,7 +43,6 @@ int	main(int argc, char **argv, char **envp)
 	}
 	while (pipex.i <= pipex.argc - 2)
 	{
-		printf("%i\n",pipex.i);
 		child(argv[pipex.i], envp, &pipex);
 		pipex.i++;
 	}

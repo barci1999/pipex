@@ -37,6 +37,7 @@ void child(char *cmd, char **envp, t_data *pipex)
         else 
         {
             dup2(pipefd[1], STDOUT_FILENO);
+
         }
         close(pipefd[1]);
         execute_cmd(cmd, envp);
