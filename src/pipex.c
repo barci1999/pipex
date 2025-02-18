@@ -28,10 +28,15 @@ int	main(int argc, char **argv, char **envp)
 	{
 		pipex.i = 3;
 		temp = pipex.i;
-		open_here(&pipex, argv[2]);
+		create_here(&pipex, argv[2]);
 		open_fd_out(&pipex, argv[argc - 1]);
+		pipex.here_fd = open("temp_heredoc", O_RDONLY, 0644);
+		if (pipex.here_fd == -1)
+		{
+			perror("Error");
+			exit(1);
+		}
 		dup2(pipex.here_fd, STDIN_FILENO);
-		close(pipex.outfile_fd);
 	}
 	else
 	{

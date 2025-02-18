@@ -14,16 +14,17 @@
 # define LIBFT_H
 # include <limits.h>
 # include <stddef.h>
+# include <stdint.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
-# include <stdint.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif
 
+int					ft_strcmp(char *s1, char *s2);
 char				*get_next_line(int fd);
 size_t				ft_get_strlen(const char *str);
 char				*ft_get_strchr(const char *s, int c);

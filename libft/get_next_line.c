@@ -23,6 +23,7 @@ static void	take_the_rest(char **pre_line, char **line)
 	if (pre_line[0][i])
 		i++;
 	*line = ft_get_substr(*pre_line, 0, i);
+	
 	if (pre_line[0][i])
 	{
 		temp = ft_get_substr(*pre_line, i, (ft_get_strlen(*pre_line) - i));

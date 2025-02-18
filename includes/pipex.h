@@ -35,7 +35,7 @@ typedef struct pipex
 }			t_data;
 
 void		open_fd_out(t_data *pipex, char *outfile);
-void		open_here(t_data *pipex, char *delim);
+void		create_here(t_data *pipex, char *delim);
 void		open_fd_in(t_data *pipex, char *infile);
 char 	*take_cmd_path(char **cmd, char **envp);
 char	**take_paths_env(char **envp);

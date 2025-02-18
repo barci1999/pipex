@@ -11,9 +11,12 @@
 /* ************************************************************************** */
 #include "pipex.h"
 
-void	open_here(t_data *pipex, char *delim)
+void	create_here(t_data *pipex, char *delim)
 {
 	char	*temp_line;
+	pid_t here;
+	char *temp_delim;
+	temp_delim = ft_strjoin(delim,"\n");
 
 	temp_line = NULL;
 	pipex->here_fd = open("temp_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -22,18 +25,26 @@ void	open_here(t_data *pipex, char *delim)
 		perror("Error");
 		exit(1);
 	}
-	while (1)
+	here = fork();
+	if(here == 0)
 	{
-		ft_printf("here_doc>");
-		temp_line = get_next_line(0);
-		if (temp_line == NULL)
-			break ;
-		if (ft_strncmp(temp_line, delim, ft_strlen(delim)) == 0)
+		while (1)
 		{
+			ft_printf("here_doc>");
+			temp_line = get_next_line(0);
+			if (temp_line == NULL)
+				break ;
+			if (ft_strcmp(temp_line, temp_delim) == 0)
+			{
+				free(temp_line);
+				free(temp_delim);
+				break ;
+			}
+			write(pipex->here_fd, temp_line, ft_strlen(temp_line));
 			free(temp_line);
-			break ;
 		}
-		write(pipex->here_fd, temp_line, ft_strlen(temp_line));
-		free(temp_line);
+		exit(0);
 	}
+	waitpid(here,NULL,0);
+	close(pipex->here_fd);
 }

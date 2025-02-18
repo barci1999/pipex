@@ -21,7 +21,6 @@ void child(char *cmd, char **envp, t_data *pipex)
         perror("Error en pipe");
         exit(1);
     }
-
     pid = fork();
     if (pid == -1)
         perror("Error en fork");
@@ -31,14 +30,9 @@ void child(char *cmd, char **envp, t_data *pipex)
         close(pipefd[0]);
 
         if (pipex->i == pipex->argc - 2)
-        {
             dup2(pipex->outfile_fd, STDOUT_FILENO);
-        }
         else 
-        {
             dup2(pipefd[1], STDOUT_FILENO);
-
-        }
         close(pipefd[1]);
         execute_cmd(cmd, envp);
     }
@@ -50,9 +44,7 @@ void child(char *cmd, char **envp, t_data *pipex)
             dup2(pipefd[0], STDIN_FILENO);
         }
         else
-        {
             close(pipefd[0]);
-        }
         close(pipefd[0]);
     }
 }
