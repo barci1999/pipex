@@ -21,9 +21,7 @@ int	main(int argc, char **argv, char **envp)
 	ft_memset(&pipex, 0, sizeof(pipex));
 	pipex.argc = argc;
 	if (argc < 5)
-	{
 		return (0);
-	}
 	if (ft_strncmp(argv[1], "here_doc", 8) == 0)
 	{
 		pipex.i = 3;
@@ -53,5 +51,9 @@ int	main(int argc, char **argv, char **envp)
 	}
 	while (temp++ <= argc - 2)
 		wait(NULL);
+	close(pipex.outfile_fd);
+	close(pipex.infile_fd);
+	close(pipex.here_fd);
 	return (0);
+
 }

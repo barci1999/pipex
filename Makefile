@@ -1,7 +1,7 @@
 NAME	= pipex
 
 CC	= cc
-CFLAGS = -Wall -Werror -Wextra -I./includes -I libft -I printf
+CFLAGS = -Wall -Werror -Wextra -g3 -I./includes -I libft -I printf
 LIBFT_DIR = ./libft
 PRINT_DIR = ./printf 
 LIBS = -L$(LIBFT_DIR) -lft -L$(PRINT_DIR) -lftprintf

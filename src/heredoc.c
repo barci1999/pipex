@@ -45,6 +45,7 @@ void	create_here(t_data *pipex, char *delim)
 			write(pipex->here_fd, temp_line, ft_strlen(temp_line));
 			free(temp_line);
 		}
+		close(pipex->here_fd);
 		exit(0);
 	}
 	free(temp_delim);
