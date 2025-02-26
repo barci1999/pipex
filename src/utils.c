@@ -17,13 +17,13 @@ void	open_fd_in(t_data *pipex, char *infile)
 	{
 		perror("Error");
 		pipex->i++;
-		exit(1);
+		return ;
 	}
 	pipex->infile_fd = open(infile, O_RDONLY);
 	if (pipex->infile_fd == -1)
 	{
 		perror("Error");
-		exit(1);
+		return ;
 	}
 }
 
