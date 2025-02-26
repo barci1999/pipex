@@ -11,19 +11,19 @@
 /* ************************************************************************** */
 #include "pipex.h"
 
-char 	*take_cmd_path(char **cmd, char **envp)
+char	*take_cmd_path(char **cmd, char **envp)
 {
 	char	*temp;
 	int		i;
 	char	*cmd_path;
-	char **paths;
-	paths = NULL;
+	char	**paths;
 
+	paths = NULL;
 	temp = NULL;
 	i = 0;
 	cmd_path = NULL;
 	paths = take_paths_env(envp);
-	while (paths != NULL)
+	while (paths[i] != NULL)
 	{
 		temp = ft_strjoin(paths[i], "/");
 		cmd_path = ft_strjoin(temp, cmd[0]);
@@ -31,20 +31,22 @@ char 	*take_cmd_path(char **cmd, char **envp)
 		if (access(cmd_path, X_OK) == 0)
 		{
 			ft_free_matrix(paths);
-			return(cmd_path);
+			return (cmd_path);
 		}
 		free(cmd_path);
 		i++;
 	}
-	return(NULL);
+	ft_free_matrix(paths);
+	return (NULL);
 }
 
 char	**take_paths_env(char **envp)
 {
-	int	i;
+	int		i;
+	char	*path_env;
+	char	**paths;
+
 	i = 0;
-	char *path_env;
-	char **paths;
 	paths = NULL;
 	path_env = NULL;
 	while (*envp)
@@ -62,5 +64,5 @@ char	**take_paths_env(char **envp)
 		perror("Error");
 		exit(1);
 	}
-	return(paths);
+	return (paths);
 }

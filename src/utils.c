@@ -10,22 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "pipex.h"
-void	free_pipes(int **pipes, int len)
-{
-	while (len > 0)
-	{
-		free(pipes[len]);
-		len--;
-	}
-	free(pipes);
-	
 
-}
 void	open_fd_in(t_data *pipex, char *infile)
 {
 	if (access(infile, F_OK) == -1)
 	{
 		perror("Error");
+		pipex->i++;
 		exit(1);
 	}
 	pipex->infile_fd = open(infile, O_RDONLY);
@@ -36,9 +27,12 @@ void	open_fd_in(t_data *pipex, char *infile)
 	}
 }
 
-void	open_fd_out(t_data *pipex, char *outfile)
+void	open_fd_out(t_data *pipex, char *outfile, int flag)
 {
-	pipex->outfile_fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (flag == 0)
+		pipex->outfile_fd = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (flag == 1)
+		pipex->outfile_fd = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (pipex->outfile_fd == -1)
 	{
 		perror("Error opening or creating output file");
