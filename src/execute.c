@@ -20,6 +20,7 @@ static void	redirec_child(t_data *pipex, int *pipefd, char *cmd, char **envp)
 		dup2(pipefd[1], STDOUT_FILENO);
 	close(pipefd[1]);
 	close(pipex->outfile_fd);
+	close(pipex->infile_fd);
 	execute_cmd(cmd, envp, pipex);
 }
 
@@ -54,7 +55,20 @@ pid_t	child(char *cmd, char **envp, t_data *pipex)
 		redirec_child(pipex, pipefd, cmd, envp);
 	else
 		redirec_father(pipex, pipefd);
+
 	return (pid);
+}
+
+void fun_clean(char *str, char *cmd_path, char **cmd, t_data *pipex)
+{
+	perror(str);
+	if (cmd_path)
+		free(cmd_path);
+	if (cmd)
+		ft_free_matrix(cmd);
+	close(pipex->infile_fd);
+	close(pipex->here_fd);
+	exit(1);
 }
 
 void	execute_cmd(char *cmds, char **envp, t_data *pipex)
@@ -67,21 +81,21 @@ void	execute_cmd(char *cmds, char **envp, t_data *pipex)
 	if (cmds == NULL)
 		exit(1);
 	cmd = ft_split(cmds, ' ');
-	cmd_path = take_cmd_path(cmd, envp);
-	if (!cmd_path)
+	if (!cmd)
+		fun_clean("Error Malloc :", NULL, NULL, pipex);
+	if(cmd[0][0] == '/')
 	{
-		perror("Error in path");
-		ft_free_matrix(cmd);
-		free(cmd_path);
-		exit(127);
-	}
+		cmd_path = ft_strdup(cmd[0]);
+		if (!cmd_path)
+			fun_clean("Error Malloc :", NULL, cmd, pipex);
+		if(ft_strrchr(cmd_path,'/') != NULL)
+		{
+			free(cmd[0]);
+			cmd[0]= ft_strrchr(cmd_path,'/') + 1;
+		}
+ 	}
+	else
+		cmd_path = take_cmd_path(cmd, envp);
 	if (execve(cmd_path, cmd, envp) == -1)
-	{
-		perror("Error in execve");
-		free(cmd_path);
-		ft_free_matrix(cmd);
-		close(pipex->infile_fd);
-		close(pipex->here_fd);
-		exit(1);
-	}
+		fun_clean("Error in execve :", cmd_path, cmd, pipex);
 }
