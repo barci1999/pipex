@@ -21,7 +21,7 @@ static void	redirec_child(t_data *pipex, int *pipefd, char *cmd, char **envp)
 	close(pipefd[1]);
 	close(pipex->outfile_fd);
 	close(pipex->infile_fd);
-	execute_cmd(cmd, envp, pipex);
+	execute_cmd(cmd, envp);
 }
 
 static void	redirec_father(t_data *pipex, int *pipefd)
@@ -55,27 +55,29 @@ pid_t	child(char *cmd, char **envp, t_data *pipex)
 		redirec_child(pipex, pipefd, cmd, envp);
 	else
 		redirec_father(pipex, pipefd);
-
 	return (pid);
 }
 
-void fun_clean(char *str, char *cmd_path, char **cmd, t_data *pipex)
+static char	*aux_execute(char *cmd_path, char **cmd)
 {
-	perror(str);
-	if (cmd_path)
-		free(cmd_path);
-	if (cmd)
-		ft_free_matrix(cmd);
-	close(pipex->infile_fd);
-	close(pipex->here_fd);
-	exit(1);
+	char	*temp;
+
+	if (ft_strrchr(cmd_path, '/') != NULL)
+	{
+		temp = ft_strdup(ft_strrchr(cmd_path, '/') + 1);
+		if (!temp)
+			fun_clean("Error in maloc :", NULL, cmd);
+		free(cmd[0]);
+		cmd[0] = temp;
+		return (cmd[0]);
+	}
+	return (NULL);
 }
 
-void	execute_cmd(char *cmds, char **envp, t_data *pipex)
+void	execute_cmd(char *cmds, char **envp)
 {
 	char	**cmd;
 	char	*cmd_path;
-	char *temp;
 
 	cmd = NULL;
 	cmd_path = NULL;
@@ -83,23 +85,23 @@ void	execute_cmd(char *cmds, char **envp, t_data *pipex)
 		exit(1);
 	cmd = ft_split(cmds, ' ');
 	if (!cmd)
-		fun_clean("Error Malloc :", NULL, NULL, pipex);
-	if(cmd[0][0] == '/')
+	{
+		printf("estoy saliendo por aqui\n");
+		fun_clean("Error Malloc :", NULL, NULL);
+	}
+	if (cmd && cmd[0] && cmd[0][0] == '/')
 	{
 		cmd_path = ft_strdup(cmd[0]);
 		if (!cmd_path)
-			fun_clean("Error Malloc :", NULL, cmd, pipex);
-		if(ft_strrchr(cmd_path,'/') != NULL)
-		{
-			temp = ft_strdup(ft_strrchr(cmd_path,'/')+1);
-			if(!temp)
-				fun_clean("Error in maloc :",NULL,cmd,pipex);
-			free(cmd[0]);
-			cmd[0]= temp;
-		}
- 	}
+			fun_clean("Error Malloc :", NULL, cmd);
+		cmd[0] = aux_execute(cmd_path, cmd);
+	}
 	else
+	{
 		cmd_path = take_cmd_path(cmd, envp);
+		if(cmd_path == NULL)
+			fun_clean("Error comand not found\n",NULL,cmd);
+	}
 	if (execve(cmd_path, cmd, envp) == -1)
-		fun_clean("Error in execve :", cmd_path, cmd, pipex);
+		fun_clean("Error in execve :", cmd_path, cmd);
 }

@@ -36,6 +36,20 @@ void	open_fd_out(t_data *pipex, char *outfile, int flag)
 	if (pipex->outfile_fd == -1)
 	{
 		perror("Error opening or creating output file");
+		close(pipex->infile_fd);
 		exit(1);
 	}
+}
+
+void	fun_clean(char *str, char *cmd_path, char **cmd)
+{
+	perror(str);
+	if (cmd_path)
+		free(cmd_path);
+	if (cmd)
+	{
+		printf("hola\n");
+		ft_free_matrix(cmd);
+	}
+	exit(1);
 }

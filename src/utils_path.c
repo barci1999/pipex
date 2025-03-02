@@ -11,12 +11,6 @@
 /* ************************************************************************** */
 #include "pipex.h"
 
-static void	fun_error(char **paths)
-{
-	perror("Error Malloc :");
-	ft_free_matrix(paths);
-	exit(1);
-}
 char	*take_cmd_path(char **cmd, char **envp)
 {
 	char	*temp;
@@ -28,22 +22,25 @@ char	*take_cmd_path(char **cmd, char **envp)
 	temp = NULL;
 	i = 0;
 	cmd_path = NULL;
+	if(cmd == NULL || cmd[0][0] == '\0')
+		return(fun_clean("Error comand invalid\n",NULL,cmd),NULL);
 	paths = take_paths_env(envp);
 	while (paths[i] != NULL)
 	{
 		temp = ft_strjoin(paths[i], "/");
 		if (!temp)
-			fun_error(paths);
+			fun_clean("Error in malloc\n", NULL, paths);
 		cmd_path = ft_strjoin(temp, cmd[0]);
 		free(temp);
 		if (!cmd_path)
-			fun_error(paths);
+			fun_clean("Error in malloc\n", NULL, paths);
 		if (access(cmd_path, X_OK) == 0)
 			return (ft_free_matrix(paths), cmd_path);
 		free(cmd_path);
 		i++;
 	}
-	return(fun_clean("Error in Path :", NULL, paths, NULL), NULL);
+	ft_free_matrix(cmd);
+	return (fun_clean("Error ", NULL, paths), NULL);
 }
 
 char	**take_paths_env(char **envp)

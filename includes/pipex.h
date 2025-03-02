@@ -39,7 +39,7 @@ void		open_fd_in(t_data *pipex, char *infile);
 char		*take_cmd_path(char **cmd, char **envp);
 char		**take_paths_env(char **envp);
 pid_t		child(char *cmd, char **envp, t_data *pipex);
-void		execute_cmd(char *cmds, char **envp, t_data *pipex);
-void fun_clean(char *str, char *cmd_path, char **cmd, t_data *pipex);
+void		execute_cmd(char *cmds, char **envp);
+void		fun_clean(char *str, char *cmd_path, char **cmd);
 
 #endif

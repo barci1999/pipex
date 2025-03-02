@@ -47,8 +47,8 @@ static void	finish(t_data *pipex)
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	pipex;
-	int		status;
-	int		salida;
+	int		status = 0;
+	int		salida = 0;
 
 	ft_memset(&pipex, 0, sizeof(pipex));
 	pipex.argc = argc;
@@ -60,15 +60,35 @@ int	main(int argc, char **argv, char **envp)
 		cmd_org(&pipex, argv);
 	while (pipex.i <= pipex.argc - 2)
 	{
-		pipex.pid = child(argv[pipex.i], envp, &pipex);
-		pipex.i++;
+		if(argv[pipex.i][0] == '\0')
+		{
+			printf("Permision denied\n");
+			pipex.i++;
+		}
+		else
+			{
+				pipex.pid = child(argv[pipex.i], envp, &pipex);
+				pipex.i++;
+			}
 	}
-	while (pipex.temp++ <= argc - 2)
+	if(pipex.pid == 0)
+	{
+		salida = 126;
+		finish(&pipex);
+		return(salida);
+	}
+	while (pipex.temp <= argc - 2)
 	{
 		pipex.pid2 = wait(&status);
 		if (pipex.pid2 == pipex.pid)
+		{
+			printf("estoy cambiando salida\n");
 			salida = WEXITSTATUS(status);
+			printf("esto es status %i\n",status);
+		}
+		pipex.temp++;
 	}
 	finish(&pipex);
+	printf("esto es salida %i\n",salida);
 	return (salida);
 }
