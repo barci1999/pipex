@@ -75,6 +75,7 @@ void	execute_cmd(char *cmds, char **envp, t_data *pipex)
 {
 	char	**cmd;
 	char	*cmd_path;
+	char *temp;
 
 	cmd = NULL;
 	cmd_path = NULL;
@@ -90,8 +91,11 @@ void	execute_cmd(char *cmds, char **envp, t_data *pipex)
 			fun_clean("Error Malloc :", NULL, cmd, pipex);
 		if(ft_strrchr(cmd_path,'/') != NULL)
 		{
+			temp = ft_strdup(ft_strrchr(cmd_path,'/')+1);
+			if(!temp)
+				fun_clean("Error in maloc :",NULL,cmd,pipex);
 			free(cmd[0]);
-			cmd[0]= ft_strrchr(cmd_path,'/') + 1;
+			cmd[0]= temp;
 		}
  	}
 	else
